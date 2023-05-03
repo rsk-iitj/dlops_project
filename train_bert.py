@@ -36,7 +36,7 @@ class CustomDataset(Dataset):
 
 def train():
     # Load the dataset
-    dataset_path = "data/train.csv"
+    dataset_path = "data\SBIC.v2.agg.tst.csv"
     df = pd.read_csv(dataset_path)
 
     # Preprocess the dataset: assuming 'hasBiasedImplication' column has values 0 (no bias) and 1 (social bias)

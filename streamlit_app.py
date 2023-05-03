@@ -1,35 +1,47 @@
 # Import necessary libraries
 import streamlit as st
 import openai
-from transformers import GPT2LMHeadModel, GPT2Tokenizer, GPT3LMHeadModel, GPT3Tokenizer
+from transformers import pipeline
 
 # Set OpenAI API key for GPT-3
-openai.api_key = "your_openai_api_key"
+openai.api_key = "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"
 
-# Load the GPT-2 and GPT-3 models
-gpt2_model = GPT2LMHeadModel.from_pretrained("gpt2")
-gpt2_tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
+# Load the GPT-2 model
+gpt2_generator = pipeline("text-generation", model="gpt2")
 
-# GPT-3 is not directly available as a pre-trained model in Transformers, so we create a dummy class
-class GPT3Model:
-    pass
-
-gpt3_model = GPT3Model()
+# Dummy class for GPT-3
 
 models = {
-    "GPT-2": gpt2_model,
-    "GPT-3": gpt3_model,
+    "GPT-2": gpt2_generator,
 }
 
+
 # Predict hate speech and social bias using the GPT-2 model
-def predict_gpt2(model, tokenizer, text):
-    # Implement your own prediction logic for hate speech and social bias using GPT-2
-    pass
+def predict_gpt2(generator, text):
+    # Example implementation using GPT-2 text generation for classification (not accurate)
+    prompt = f"Hate speech classification: {text}"
+    generated_text = generator(prompt, max_length=50, do_sample=True)[0]['generated_text']
+    hate_speech_result = 'yes' in generated_text.lower()
+
+    prompt = f"Social bias classification: {text}"
+    generated_text = generator(prompt, max_length=50, do_sample=True)[0]['generated_text']
+    social_bias_result = 'yes' in generated_text.lower()
+
+    return hate_speech_result, social_bias_result
 
 # Predict hate speech and social bias using the GPT-3 model
 def predict_gpt3(text):
-    # Implement your own prediction logic for hate speech and social bias using GPT-3
-    pass
+    # Example implementation using GPT-3 text generation for classification (not accurate)
+    prompt = f"Hate speech classification: {text}"
+    response = openai.Completion.create(engine="text-davinci-002", prompt=prompt, max_tokens=10, n=1, stop=None, temperature=0.5)
+    hate_speech_result = 'yes' in response.choices[0].text.lower()
+
+    prompt = f"Social bias classification: {text}"
+    response = openai.Completion.create(engine="text-davinci-002", prompt=prompt, max_tokens=10, n=1, stop=None, temperature=0.5)
+    social_bias_result = 'yes' in response.choices[0].text.lower()
+
+    return hate_speech_result, social_bias_result
+
 
 # Streamlit app
 def main():
@@ -49,7 +61,7 @@ def main():
 
             if model_name == "GPT-2":
                 # Hate speech and social bias detection using GPT-2
-                hate_speech_result, social_bias_result = predict_gpt2(gpt2_model, gpt2_tokenizer, user_input)
+                hate_speech_result, social_bias_result = predict_gpt2(gpt2_generator, user_input)
             elif model_name == "GPT-3":
                 # Hate speech and social bias detection using GPT-3
                 hate_speech_result, social_bias_result = predict_gpt3(user_input)

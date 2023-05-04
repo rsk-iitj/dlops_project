@@ -1,7 +1,7 @@
 # Import necessary libraries
 import streamlit as st
 import openai
-from transformers import GPT2LMHeadModel, GPT2Tokenizer, GPT3LMHeadModel, GPT3Tokenizer
+from transformers import GPT2LMHeadModel, GPT2Tokenizer
 
 # Set OpenAI API key for GPT-3
 openai.api_key = "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"
